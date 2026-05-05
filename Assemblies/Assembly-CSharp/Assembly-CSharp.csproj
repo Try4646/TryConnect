@@ -1,0 +1,692 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{AA7AFF18-7518-4DE2-B554-0A7F9EEC2A92}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Assembly-CSharp</RootNamespace>
+    <AssemblyName>Assembly-CSharp</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp-firstpass">
+      <HintPath>D:\SteamLibrary\steamapps\common\Gamble With Your Friends\Gamble With Your Friends_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
+    </Reference>
+    <Reference Include="com.rlabrecque.steamworks.net">
+      <HintPath>D:\SteamLibrary\steamapps\common\Gamble With Your Friends\Gamble With Your Friends_Data\Managed\com.rlabrecque.steamworks.net.dll</HintPath>
+    </Reference>
+    <Reference Include="Discord.Sdk">
+      <HintPath>D:\SteamLibrary\steamapps\common\Gamble With Your Friends\Gamble With Your Friends_Data\Managed\Discord.Sdk.dll</HintPath>
+    </Reference>
+    <Reference Include="DissonanceFMOD_Playback">
+      <HintPath>D:\SteamLibrary\steamapps\common\Gamble With Your Friends\Gamble With Your Friends_Data\Managed\DissonanceFMOD_Playback.dll</HintPath>
+    </Reference>
+    <Reference Include="DissonanceFMOD_Recording">
+      <HintPath>D:\SteamLibrary\steamapps\common\Gamble With Your Friends\Gamble With Your Friends_Data\Managed\DissonanceFMOD_Recording.dll</HintPath>
+    </Reference>
+    <Reference Include="DissonanceVoip">
+      <HintPath>D:\SteamLibrary\steamapps\common\Gamble With Your Friends\Gamble With Your Friends_Data\Managed\DissonanceVoip.dll</HintPath>
+    </Reference>
+    <Reference Include="DOTween">
+      <HintPath>D:\SteamLibrary\steamapps\common\Gamble With Your Friends\Gamble With Your Friends_Data\Managed\DOTween.dll</HintPath>
+    </Reference>
+    <Reference Include="Febucci.TextAnimator.Runtime">
+      <HintPath>D:\SteamLibrary\steamapps\common\Gamble With Your Friends\Gamble With Your Friends_Data\Managed\Febucci.TextAnimator.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="FMODUnity">
+      <HintPath>D:\SteamLibrary\steamapps\common\Gamble With Your Friends\Gamble With Your Friends_Data\Managed\FMODUnity.dll</HintPath>
+    </Reference>
+    <Reference Include="Gilzoide.UpdateManager">
+      <HintPath>D:\SteamLibrary\steamapps\common\Gamble With Your Friends\Gamble With Your Friends_Data\Managed\Gilzoide.UpdateManager.dll</HintPath>
+    </Reference>
+    <Reference Include="Mirror">
+      <HintPath>D:\SteamLibrary\steamapps\common\Gamble With Your Friends\Gamble With Your Friends_Data\Managed\Mirror.dll</HintPath>
+    </Reference>
+    <Reference Include="Mirror.Components">
+      <HintPath>D:\SteamLibrary\steamapps\common\Gamble With Your Friends\Gamble With Your Friends_Data\Managed\Mirror.Components.dll</HintPath>
+    </Reference>
+    <Reference Include="MoreMountains.Tools">
+      <HintPath>D:\SteamLibrary\steamapps\common\Gamble With Your Friends\Gamble With Your Friends_Data\Managed\MoreMountains.Tools.dll</HintPath>
+    </Reference>
+    <Reference Include="netstandard">
+      <HintPath>D:\SteamLibrary\steamapps\common\Gamble With Your Friends\Gamble With Your Friends_Data\Managed\netstandard.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>D:\SteamLibrary\steamapps\common\Gamble With Your Friends\Gamble With Your Friends_Data\Managed\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="ShapesRuntime">
+      <HintPath>D:\SteamLibrary\steamapps\common\Gamble With Your Friends\Gamble With Your Friends_Data\Managed\ShapesRuntime.dll</HintPath>
+    </Reference>
+    <Reference Include="Sirenix.Serialization">
+      <HintPath>D:\SteamLibrary\steamapps\common\Gamble With Your Friends\Gamble With Your Friends_Data\Managed\Sirenix.Serialization.dll</HintPath>
+    </Reference>
+    <Reference Include="SkyBraveToolkitScripts">
+      <HintPath>D:\SteamLibrary\steamapps\common\Gamble With Your Friends\Gamble With Your Friends_Data\Managed\SkyBraveToolkitScripts.dll</HintPath>
+    </Reference>
+    <Reference Include="StompyRobot.SRDebugger">
+      <HintPath>D:\SteamLibrary\steamapps\common\Gamble With Your Friends\Gamble With Your Friends_Data\Managed\StompyRobot.SRDebugger.dll</HintPath>
+    </Reference>
+    <Reference Include="StompyRobot.SRF">
+      <HintPath>D:\SteamLibrary\steamapps\common\Gamble With Your Friends\Gamble With Your Friends_Data\Managed\StompyRobot.SRF.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.AI.Navigation">
+      <HintPath>D:\SteamLibrary\steamapps\common\Gamble With Your Friends\Gamble With Your Friends_Data\Managed\Unity.AI.Navigation.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Cinemachine">
+      <HintPath>D:\SteamLibrary\steamapps\common\Gamble With Your Friends\Gamble With Your Friends_Data\Managed\Unity.Cinemachine.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.InputSystem">
+      <HintPath>D:\SteamLibrary\steamapps\common\Gamble With Your Friends\Gamble With Your Friends_Data\Managed\Unity.InputSystem.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Mathematics">
+      <HintPath>D:\SteamLibrary\steamapps\common\Gamble With Your Friends\Gamble With Your Friends_Data\Managed\Unity.Mathematics.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.Core.Runtime">
+      <HintPath>D:\SteamLibrary\steamapps\common\Gamble With Your Friends\Gamble With Your Friends_Data\Managed\Unity.RenderPipelines.Core.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.Universal.Runtime">
+      <HintPath>D:\SteamLibrary\steamapps\common\Gamble With Your Friends\Gamble With Your Friends_Data\Managed\Unity.RenderPipelines.Universal.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>D:\SteamLibrary\steamapps\common\Gamble With Your Friends\Gamble With Your Friends_Data\Managed\Unity.TextMeshPro.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AIModule">
+      <HintPath>D:\SteamLibrary\steamapps\common\Gamble With Your Friends\Gamble With Your Friends_Data\Managed\UnityEngine.AIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AnimationModule">
+      <HintPath>D:\SteamLibrary\steamapps\common\Gamble With Your Friends\Gamble With Your Friends_Data\Managed\UnityEngine.AnimationModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AudioModule">
+      <HintPath>D:\SteamLibrary\steamapps\common\Gamble With Your Friends\Gamble With Your Friends_Data\Managed\UnityEngine.AudioModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>D:\SteamLibrary\steamapps\common\Gamble With Your Friends\Gamble With Your Friends_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.InputLegacyModule">
+      <HintPath>D:\SteamLibrary\steamapps\common\Gamble With Your Friends\Gamble With Your Friends_Data\Managed\UnityEngine.InputLegacyModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.JSONSerializeModule">
+      <HintPath>D:\SteamLibrary\steamapps\common\Gamble With Your Friends\Gamble With Your Friends_Data\Managed\UnityEngine.JSONSerializeModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ParticleSystemModule">
+      <HintPath>D:\SteamLibrary\steamapps\common\Gamble With Your Friends\Gamble With Your Friends_Data\Managed\UnityEngine.ParticleSystemModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Physics2DModule">
+      <HintPath>D:\SteamLibrary\steamapps\common\Gamble With Your Friends\Gamble With Your Friends_Data\Managed\UnityEngine.Physics2DModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.PhysicsModule">
+      <HintPath>D:\SteamLibrary\steamapps\common\Gamble With Your Friends\Gamble With Your Friends_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>D:\SteamLibrary\steamapps\common\Gamble With Your Friends\Gamble With Your Friends_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>D:\SteamLibrary\steamapps\common\Gamble With Your Friends\Gamble With Your Friends_Data\Managed\UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIElementsModule">
+      <HintPath>D:\SteamLibrary\steamapps\common\Gamble With Your Friends\Gamble With Your Friends_Data\Managed\UnityEngine.UIElementsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIModule">
+      <HintPath>D:\SteamLibrary\steamapps\common\Gamble With Your Friends\Gamble With Your Friends_Data\Managed\UnityEngine.UIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestModule">
+      <HintPath>D:\SteamLibrary\steamapps\common\Gamble With Your Friends\Gamble With Your Friends_Data\Managed\UnityEngine.UnityWebRequestModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestTextureModule">
+      <HintPath>D:\SteamLibrary\steamapps\common\Gamble With Your Friends\Gamble With Your Friends_Data\Managed\UnityEngine.UnityWebRequestTextureModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.VideoModule">
+      <HintPath>D:\SteamLibrary\steamapps\common\Gamble With Your Friends\Gamble With Your Friends_Data\Managed\UnityEngine.VideoModule.dll</HintPath>
+    </Reference>
+    <Reference Include="websocket-sharp">
+      <HintPath>D:\SteamLibrary\steamapps\common\Gamble With Your Friends\Gamble With Your Friends_Data\Managed\websocket-sharp.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ActiveChallengeInfo.cs" />
+    <Compile Include="AllPlayersTriggerZone.cs" />
+    <Compile Include="AnalyticsManager.cs" />
+    <Compile Include="AngelsReel.cs" />
+    <Compile Include="Baccarat.cs" />
+    <Compile Include="BaccaratBetType.cs" />
+    <Compile Include="BaccaratResult.cs" />
+    <Compile Include="BackButtonEscapeHandler.cs" />
+    <Compile Include="BakedVolumeLight.cs" />
+    <Compile Include="BalanceChangeData.cs" />
+    <Compile Include="Bank.cs" />
+    <Compile Include="BankKnob.cs" />
+    <Compile Include="BankMode.cs" />
+    <Compile Include="BankTier.cs" />
+    <Compile Include="BaseCursor.cs" />
+    <Compile Include="BaseCursorManager.cs" />
+    <Compile Include="Basketball.cs" />
+    <Compile Include="BasketballScoreboard.cs" />
+    <Compile Include="Bat.cs" />
+    <Compile Include="BatHolder.cs" />
+    <Compile Include="BetAmountConditionData.cs" />
+    <Compile Include="BetSlider.cs" />
+    <Compile Include="BezierCurve.cs" />
+    <Compile Include="Blackjack.cs" />
+    <Compile Include="BlackjackHandValueConditionData.cs" />
+    <Compile Include="BlackjackResult.cs" />
+    <Compile Include="BodyShreddingMachine.cs" />
+    <Compile Include="Bongo.cs" />
+    <Compile Include="BoolGrid3x5.cs" />
+    <Compile Include="BossAnnouncement.cs" />
+    <Compile Include="BossGame.cs" />
+    <Compile Include="BuffArea.cs" />
+    <Compile Include="BugReportAPIClient.cs" />
+    <Compile Include="BugReportButton.cs" />
+    <Compile Include="BugReportFormUI.cs" />
+    <Compile Include="BugReportPanel.cs" />
+    <Compile Include="BugReportPayload.cs" />
+    <Compile Include="BuildTypeDetector.cs" />
+    <Compile Include="CameraBreathing.cs" />
+    <Compile Include="CameraClipping.cs" />
+    <Compile Include="CameraDoRender.cs" />
+    <Compile Include="CameramanMode.cs" />
+    <Compile Include="CameramanNoclipCamera.cs" />
+    <Compile Include="CameraSettings.cs" />
+    <Compile Include="CanvasIdentifier.cs" />
+    <Compile Include="Card.cs" />
+    <Compile Include="CardData.cs" />
+    <Compile Include="CardDataSO.cs" />
+    <Compile Include="CasinoBuilding.cs" />
+    <Compile Include="CasinoFloor.cs" />
+    <Compile Include="CasinoGameFeedbacks.cs" />
+    <Compile Include="CasinoGameType.cs" />
+    <Compile Include="CasinoOffersManager.cs" />
+    <Compile Include="Challenge.cs" />
+    <Compile Include="ChallengeBooth.cs" />
+    <Compile Include="ChallengeConditionData.cs" />
+    <Compile Include="ChallengeContext.cs" />
+    <Compile Include="ChallengeEntryUI.cs" />
+    <Compile Include="ChallengeManager.cs" />
+    <Compile Include="ChallengeProgress.cs" />
+    <Compile Include="ChallengeProgressSaveData.cs" />
+    <Compile Include="ChallengeSettings.cs" />
+    <Compile Include="ChallengeSyncData.cs" />
+    <Compile Include="ChangeType.cs" />
+    <Compile Include="ChessPiece.cs" />
+    <Compile Include="ClawMachine.cs" />
+    <Compile Include="ClawMachineItem.cs" />
+    <Compile Include="ClawMachineItemData.cs" />
+    <Compile Include="ClientScenePlayReadyMessage.cs" />
+    <Compile Include="CoinFlip.cs" />
+    <Compile Include="CoinFlipSFX.cs" />
+    <Compile Include="ColorCauldron.cs" />
+    <Compile Include="ColorHexUtility.cs" />
+    <Compile Include="ConditionState.cs" />
+    <Compile Include="ConditionStateSyncData.cs" />
+    <Compile Include="ConditionStateTracker.cs" />
+    <Compile Include="ConfirmationDialog.cs" />
+    <Compile Include="ConfirmationDialogManager.cs" />
+    <Compile Include="ConsoleButton.cs" />
+    <Compile Include="ConsoleProDebug.cs" />
+    <Compile Include="ConsumableItem.cs" />
+    <Compile Include="Coordinator.cs" />
+    <Compile Include="CosmeticData.cs" />
+    <Compile Include="CosmeticDataManager.cs" />
+    <Compile Include="CosmeticRarity.cs" />
+    <Compile Include="CosmeticsUnlockManager.cs" />
+    <Compile Include="CosmeticType.cs" />
+    <Compile Include="CosmeticWardrobe.cs" />
+    <Compile Include="Craps.cs" />
+    <Compile Include="CrapsSequenceConditionData.cs" />
+    <Compile Include="Crash.cs" />
+    <Compile Include="CreditEntryJson.cs" />
+    <Compile Include="CreditsFileJson.cs" />
+    <Compile Include="CreditsMannequinController.cs" />
+    <Compile Include="CreditsMannequinSpawnManager.cs" />
+    <Compile Include="CreditsRollManager.cs" />
+    <Compile Include="CrossyRoad.cs" />
+    <Compile Include="CuriousBehavior.cs" />
+    <Compile Include="CursorData.cs" />
+    <Compile Include="CursorManager.cs" />
+    <Compile Include="CursorType.cs" />
+    <Compile Include="CustomDrag.cs" />
+    <Compile Include="CustomGravity.cs" />
+    <Compile Include="CustomNetworkManager.cs" />
+    <Compile Include="DaySummaryQuotaSlider.cs" />
+    <Compile Include="DaySummaryRuntime.cs" />
+    <Compile Include="DaySummaryTicketEntry.cs" />
+    <Compile Include="DaySummaryUI.cs" />
+    <Compile Include="DebtBag.cs" />
+    <Compile Include="DebtBagMachine.cs" />
+    <Compile Include="DebtZone.cs" />
+    <Compile Include="DevilsReel.cs" />
+    <Compile Include="DevSteamAccessGate.cs" />
+    <Compile Include="Dice.cs" />
+    <Compile Include="DiceManager.cs" />
+    <Compile Include="DisableIfNotLobbyOwner.cs" />
+    <Compile Include="DisableIfVersionMismatch.cs" />
+    <Compile Include="DisableOnStart.cs" />
+    <Compile Include="DiscordConnectionButtonUI.cs" />
+    <Compile Include="DiscordRichPresenceManager.cs" />
+    <Compile Include="DiscordToasterUI.cs" />
+    <Compile Include="DissonanceSingleton.cs" />
+    <Compile Include="Dissonance\Integrations\MirrorIgnorance\Demo\MirrorIgnorancePlayerController.cs" />
+    <Compile Include="Dissonance\Integrations\MirrorIgnorance\DissonanceNetworkMessage.cs" />
+    <Compile Include="Dissonance\Integrations\MirrorIgnorance\DissonanceNetworkMessageExtensions.cs" />
+    <Compile Include="Dissonance\Integrations\MirrorIgnorance\MirrorConn.cs" />
+    <Compile Include="Dissonance\Integrations\MirrorIgnorance\MirrorIgnoranceClient.cs" />
+    <Compile Include="Dissonance\Integrations\MirrorIgnorance\MirrorIgnoranceCommsNetwork.cs" />
+    <Compile Include="Dissonance\Integrations\MirrorIgnorance\MirrorIgnorancePlayer.cs" />
+    <Compile Include="Dissonance\Integrations\MirrorIgnorance\MirrorIgnoranceServer.cs" />
+    <Compile Include="Dissonance\Integrations\Offline\OfflineCommsNetwork.cs" />
+    <Compile Include="DragonTower.cs" />
+    <Compile Include="DragonTowerButton.cs" />
+    <Compile Include="Drink.cs" />
+    <Compile Include="DrinkingSocketAction.cs" />
+    <Compile Include="DropdownSettingItem.cs" />
+    <Compile Include="DuckRace.cs" />
+    <Compile Include="DuckRaceDuck.cs" />
+    <Compile Include="DuckRaceWinConditionData.cs" />
+    <Compile Include="DynamicRenderTextureResolution.cs" />
+    <Compile Include="DynamicSettingsApplier.cs" />
+    <Compile Include="ElevatorGuy.cs" />
+    <Compile Include="ElevatorManager.cs" />
+    <Compile Include="EmoteWheelController.cs" />
+    <Compile Include="EndingDebtPaid.cs" />
+    <Compile Include="EndingSequenceManager.cs" />
+    <Compile Include="EndOfRoundData.cs" />
+    <Compile Include="EpicToonFX\ETFXEffectController.cs" />
+    <Compile Include="EpicToonFX\ETFXEffectControllerPooled.cs" />
+    <Compile Include="EpicToonFX\ETFXEffectCycler.cs" />
+    <Compile Include="EpicToonFX\ETFXFireProjectile.cs" />
+    <Compile Include="EpicToonFX\ETFXLightFade.cs" />
+    <Compile Include="EpicToonFX\ETFXLoopScript.cs" />
+    <Compile Include="EpicToonFX\ETFXMouseOrbit.cs" />
+    <Compile Include="EpicToonFX\ETFXPitchRandomizer.cs" />
+    <Compile Include="EpicToonFX\ETFXProjectileScript.cs" />
+    <Compile Include="EpicToonFX\ETFXRotation.cs" />
+    <Compile Include="EpicToonFX\ETFXSceneManager.cs" />
+    <Compile Include="EpicToonFX\ETFXSpriteBouncer.cs" />
+    <Compile Include="EpicToonFX\ETFXTarget.cs" />
+    <Compile Include="EpicToonFX\TargetEffects.cs" />
+    <Compile Include="EscapeMenu.cs" />
+    <Compile Include="EscapeMenuSettingsPanel.cs" />
+    <Compile Include="EscapeMenuVoiceList.cs" />
+    <Compile Include="ETFXPEL\ButtonTypes.cs" />
+    <Compile Include="ETFXPEL\ParticleEffectsLibrary.cs" />
+    <Compile Include="ETFXPEL\PEButtonScript.cs" />
+    <Compile Include="ETFXPEL\UICanvasManager.cs" />
+    <Compile Include="Extensions\MonoSingleton.cs" />
+    <Compile Include="Extensions\NetworkSingleton.cs" />
+    <Compile Include="EyeLookTarget.cs" />
+    <Compile Include="EyeZoomEffect.cs" />
+    <Compile Include="FathF.cs" />
+    <Compile Include="FlexibleCreditsScreen.cs" />
+    <Compile Include="FloatingObjectPhysics.cs" />
+    <Compile Include="FollowUsSceneManager.cs" />
+    <Compile Include="FramerateProvider.cs" />
+    <Compile Include="GachaMachine.cs" />
+    <Compile Include="GachaSphere.cs" />
+    <Compile Include="GamblerBehavior.cs" />
+    <Compile Include="GameBase.cs" />
+    <Compile Include="GameLostContributionEntry.cs" />
+    <Compile Include="GameManager.cs" />
+    <Compile Include="GameOverUI.cs" />
+    <Compile Include="GameResultBreakdown.cs" />
+    <Compile Include="GameResultsManager.cs" />
+    <Compile Include="GameSettings.cs" />
+    <Compile Include="GameSettingsAPIManager.cs" />
+    <Compile Include="GameSettingsManager.cs" />
+    <Compile Include="GameStamp.cs" />
+    <Compile Include="GameState.cs" />
+    <Compile Include="GameTypeConditionData.cs" />
+    <Compile Include="GameUI.cs" />
+    <Compile Include="GoldenChip.cs" />
+    <Compile Include="GoOnlineClient.cs" />
+    <Compile Include="GraphicsSettings.cs" />
+    <Compile Include="HandTransformWatcher.cs" />
+    <Compile Include="HeldItemActionPanel.cs" />
+    <Compile Include="HiLoGame.cs" />
+    <Compile Include="HiLoSlider.cs" />
+    <Compile Include="Hoop.cs" />
+    <Compile Include="IDropdownOptionsProvider.cs" />
+    <Compile Include="IInteractable.cs" />
+    <Compile Include="ImmunityCross.cs" />
+    <Compile Include="InputActions.cs" />
+    <Compile Include="InputEvents.cs" />
+    <Compile Include="InputLayer.cs" />
+    <Compile Include="InputMode.cs" />
+    <Compile Include="InputModeManager.cs" />
+    <Compile Include="InputReader.cs" />
+    <Compile Include="InteractableBase.cs" />
+    <Compile Include="InteractableEventTrigger.cs" />
+    <Compile Include="InteractionStatus.cs" />
+    <Compile Include="InteractionUIPanel.cs" />
+    <Compile Include="InviteFriendsButton.cs" />
+    <Compile Include="Item.cs" />
+    <Compile Include="ItemAction.cs" />
+    <Compile Include="ItemDescriptionDisplayManager.cs" />
+    <Compile Include="ItemDescriptionSettings.cs" />
+    <Compile Include="ItemHandController.cs" />
+    <Compile Include="ItemManager.cs" />
+    <Compile Include="ItemPriceDisplayManager.cs" />
+    <Compile Include="ItemPriceSettings.cs" />
+    <Compile Include="ItemStamp.cs" />
+    <Compile Include="ItemStampManager.cs" />
+    <Compile Include="IUIManager.cs" />
+    <Compile Include="JoinGameMessage.cs" />
+    <Compile Include="Keno.cs" />
+    <Compile Include="KenoButton.cs" />
+    <Compile Include="KeyButtonManager.cs" />
+    <Compile Include="Keypad.cs" />
+    <Compile Include="LightbakerManager.cs" />
+    <Compile Include="LightVolume.cs" />
+    <Compile Include="LimoMusicStarter.cs" />
+    <Compile Include="LoadingQuotes.cs" />
+    <Compile Include="LobbyManager.cs" />
+    <Compile Include="LobbyMemberInteraction.cs" />
+    <Compile Include="LobbyMemberList.cs" />
+    <Compile Include="LobbyMembersManager.cs" />
+    <Compile Include="LobbyModeDropdownButton.cs" />
+    <Compile Include="LobbySettings.cs" />
+    <Compile Include="LocalManager.cs" />
+    <Compile Include="LocalSaveManager.cs" />
+    <Compile Include="LocalVoiceBroadcastIndicator.cs" />
+    <Compile Include="LookAtCamera.cs" />
+    <Compile Include="LossCountConditionData.cs" />
+    <Compile Include="ManagersInstance.cs" />
+    <Compile Include="MerchantBuyButton.cs" />
+    <Compile Include="MerchantBuyZone.cs" />
+    <Compile Include="MeshCombiner.cs" />
+    <Compile Include="Microphone.cs" />
+    <Compile Include="MicrophoneDevicesProvider.cs" />
+    <Compile Include="Microsoft\CodeAnalysis\EmbeddedAttribute.cs" />
+    <Compile Include="Minesweeper.cs" />
+    <Compile Include="MinesweeperTile.cs" />
+    <Compile Include="Mirror\GeneratedNetworkCode.cs" />
+    <Compile Include="MoneyChangeText.cs" />
+    <Compile Include="MoneyDisplayAndFeedbacks.cs" />
+    <Compile Include="MoneyFormatter.cs" />
+    <Compile Include="MoneyManager.cs" />
+    <Compile Include="MoneyPipe.cs" />
+    <Compile Include="MoneyWheel.cs" />
+    <Compile Include="MoneyWheelButton.cs" />
+    <Compile Include="MultiColliderTracker.cs" />
+    <Compile Include="MusicManager.cs" />
+    <Compile Include="MysteryBox.cs" />
+    <Compile Include="NavMeshManager.cs" />
+    <Compile Include="NewConsole.cs" />
+    <Compile Include="NextCasinoPredicter.cs" />
+    <Compile Include="Noclip.cs" />
+    <Compile Include="NPC.cs" />
+    <Compile Include="NPCBehavior.cs" />
+    <Compile Include="NPCBehaviorState.cs" />
+    <Compile Include="NPCController.cs" />
+    <Compile Include="NPCCosmeticSelector.cs" />
+    <Compile Include="NPCEyes.cs" />
+    <Compile Include="NPCHolder.cs" />
+    <Compile Include="NPCSocket.cs" />
+    <Compile Include="NPCSocketAction.cs" />
+    <Compile Include="NPCSocketManager.cs" />
+    <Compile Include="NPCSpawner.cs" />
+    <Compile Include="NpcSpawnPoint.cs" />
+    <Compile Include="ObjectStamp.cs" />
+    <Compile Include="OfflineSplashCoinFlip.cs" />
+    <Compile Include="OnboardingDisplayer.cs" />
+    <Compile Include="OrganManager.cs" />
+    <Compile Include="OrganType.cs" />
+    <Compile Include="Outline.cs" />
+    <Compile Include="OverflowFireEffect.cs" />
+    <Compile Include="PatternToken.cs" />
+    <Compile Include="PayoutAmountConditionData.cs" />
+    <Compile Include="PayoutMultiplierConditionData.cs" />
+    <Compile Include="PayoutRecord.cs" />
+    <Compile Include="PayoutTracker.cs" />
+    <Compile Include="PhoneBooth.cs" />
+    <Compile Include="PlayerBody.cs" />
+    <Compile Include="PlayerBuff.cs" />
+    <Compile Include="PlayerBuffType.cs" />
+    <Compile Include="PlayerBuffUI.cs" />
+    <Compile Include="PlayerCameraController.cs" />
+    <Compile Include="PlayerCarry.cs" />
+    <Compile Include="PlayerController.cs" />
+    <Compile Include="PlayerCreditsSnapshot.cs" />
+    <Compile Include="PlayerCreditsSnapshotSerialization.cs" />
+    <Compile Include="PlayerCustomization.cs" />
+    <Compile Include="PlayerEnergy.cs" />
+    <Compile Include="PlayerExpressionComponent.cs" />
+    <Compile Include="PlayerEyes.cs" />
+    <Compile Include="PlayerEyesUI.cs" />
+    <Compile Include="PlayerHandBobbing.cs" />
+    <Compile Include="PlayerHandButtonAnimation.cs" />
+    <Compile Include="PlayerHead.cs" />
+    <Compile Include="PlayerInfo.cs" />
+    <Compile Include="PlayerInteract.cs" />
+    <Compile Include="PlayerInventory.cs" />
+    <Compile Include="PlayerMoneyTier.cs" />
+    <Compile Include="PlayerMouth.cs" />
+    <Compile Include="PlayerOrganData.cs" />
+    <Compile Include="PlayerOrgans.cs" />
+    <Compile Include="PlayerOrganSaveData.cs" />
+    <Compile Include="PlayerParticles.cs" />
+    <Compile Include="PlayerPingManager.cs" />
+    <Compile Include="PlayerProfile.cs" />
+    <Compile Include="PlayerReferences.cs" />
+    <Compile Include="PlayerResultData.cs" />
+    <Compile Include="PlayerResultDebugEntry.cs" />
+    <Compile Include="PlayerSettings.cs" />
+    <Compile Include="PlayerSFX.cs" />
+    <Compile Include="PlayerSpawnManager.cs" />
+    <Compile Include="PlayerUpgradeData.cs" />
+    <Compile Include="PlayerUpgradeSaveData.cs" />
+    <Compile Include="PlayerUpgradeType.cs" />
+    <Compile Include="PlayerUpgradeValue.cs" />
+    <Compile Include="PlayerVoiceFX.cs" />
+    <Compile Include="PlayerVoiceSpriteIndicator.cs" />
+    <Compile Include="PlayerVoiceVolumePersistence.cs" />
+    <Compile Include="PlayVfxOnEnable.cs" />
+    <Compile Include="Plinko.cs" />
+    <Compile Include="PlinkoPillar.cs" />
+    <Compile Include="PlinkoPocket.cs" />
+    <Compile Include="PlinkoPuck.cs" />
+    <Compile Include="PlinkoPuckSFX.cs" />
+    <Compile Include="Plush.cs" />
+    <Compile Include="Poker.cs" />
+    <Compile Include="PokerHandConditionData.cs" />
+    <Compile Include="PokerResult.cs" />
+    <Compile Include="PolleSFX.cs" />
+    <Compile Include="Pool.cs" />
+    <Compile Include="PrimitiveRbNetworkPlayer.cs" />
+    <Compile Include="ProfitConditionData.cs" />
+    <Compile Include="ProfitDataPoint.cs" />
+    <Compile Include="ProfitHistorySaveData.cs" />
+    <Compile Include="ProfitLineGraph3D.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PublicLobbyListEntry.cs" />
+    <Compile Include="PublicLobbyListUI.cs" />
+    <Compile Include="QuitGameComponent.cs" />
+    <Compile Include="QuotaGun.cs" />
+    <Compile Include="QuotaSlider.cs" />
+    <Compile Include="RandomDriftRotation.cs" />
+    <Compile Include="RandomNPCSFX.cs" />
+    <Compile Include="Rank.cs" />
+    <Compile Include="ReasonDemo.cs" />
+    <Compile Include="RebindSettingItem.cs" />
+    <Compile Include="RefreshRateProvider.cs" />
+    <Compile Include="RemoveIfLocalPlayer.cs" />
+    <Compile Include="RemoveIfNotLocalPlayer.cs" />
+    <Compile Include="ReplaceAllMaterialShaders.cs" />
+    <Compile Include="RequestSettingsFromApi.cs" />
+    <Compile Include="RerollButton.cs" />
+    <Compile Include="ResetSettingItem.cs" />
+    <Compile Include="ResolutionByAspectProvider.cs" />
+    <Compile Include="ResolutionSettingItem.cs" />
+    <Compile Include="ReturnToMainMenu.cs" />
+    <Compile Include="RotateByTransformY.cs" />
+    <Compile Include="Rotator.cs" />
+    <Compile Include="Roulette.cs" />
+    <Compile Include="RouletteButton.cs" />
+    <Compile Include="RouletteWheel.cs" />
+    <Compile Include="SaveData.cs" />
+    <Compile Include="SaveManager.cs" />
+    <Compile Include="SaveSlotManager.cs" />
+    <Compile Include="SaveSlotUI.cs" />
+    <Compile Include="SceneMaterialAuditor.cs" />
+    <Compile Include="SceneReadyMessage.cs" />
+    <Compile Include="SceneSkipper.cs" />
+    <Compile Include="SceneSwitcher.cs" />
+    <Compile Include="SceneTransitioner.cs" />
+    <Compile Include="SeededRandomManager.cs" />
+    <Compile Include="SelfMeshDisabler.cs" />
+    <Compile Include="SentenceGenerator.cs" />
+    <Compile Include="SentencePattern.cs" />
+    <Compile Include="ServerAuthorityExamplePlayerController.cs" />
+    <Compile Include="SettingItemBase.cs" />
+    <Compile Include="SettingKind.cs" />
+    <Compile Include="SettingResponse.cs" />
+    <Compile Include="SettingsApplier.cs" />
+    <Compile Include="SettingsLayout.cs" />
+    <Compile Include="SettingsLayoutRuntimeUI.cs" />
+    <Compile Include="SettingsSystem\DisplaySettingsApplier.cs" />
+    <Compile Include="SettingsSystem\EmoteWheelSettingsApplier.cs" />
+    <Compile Include="SettingsSystem\FramerateSettingsApplier.cs" />
+    <Compile Include="SettingsSystem\GraphicsSettingsApplier.cs" />
+    <Compile Include="SettingsSystem\InputSettingsApplier.cs" />
+    <Compile Include="SettingsSystem\ISettingsApplier.cs" />
+    <Compile Include="SettingsSystem\MicrophoneSettingsApplier.cs" />
+    <Compile Include="SettingsSystem\SettingsPersistence.cs" />
+    <Compile Include="SettingsSystem\SoundSettingsApplier.cs" />
+    <Compile Include="SFXAmbienceManager.cs" />
+    <Compile Include="SFXComponent.cs" />
+    <Compile Include="SFXGenericButtonComponent.cs" />
+    <Compile Include="SFXGenericUIButtonComponent.cs" />
+    <Compile Include="SFXLocalLoopComponent.cs" />
+    <Compile Include="SFXLocalPhysicsObject.cs" />
+    <Compile Include="SFXLocalPlayer.cs" />
+    <Compile Include="SFXLoopComponent.cs" />
+    <Compile Include="SFXManager.cs" />
+    <Compile Include="SFXParams.cs" />
+    <Compile Include="SFXPhysicsObject.cs" />
+    <Compile Include="SFXTriggerComponent.cs" />
+    <Compile Include="ShopMusicRandomizer.cs" />
+    <Compile Include="SimpleCursorManager.cs" />
+    <Compile Include="SkipUI.cs" />
+    <Compile Include="SleddingFrog.cs" />
+    <Compile Include="SliderSettingItem.cs" />
+    <Compile Include="SlotPattern.cs" />
+    <Compile Include="SlotReel.cs" />
+    <Compile Include="Slots.cs" />
+    <Compile Include="SlotsSocketAction.cs" />
+    <Compile Include="SlotType.cs" />
+    <Compile Include="SmokingSocketAction.cs" />
+    <Compile Include="SmoothSyncMirrorExamplePlayerController.cs" />
+    <Compile Include="Smooth\Half.cs" />
+    <Compile Include="Smooth\HalfHelper.cs" />
+    <Compile Include="Smooth\MsgType.cs" />
+    <Compile Include="Smooth\NetworkStateMirror.cs" />
+    <Compile Include="Smooth\SmoothControllerMirror.cs" />
+    <Compile Include="Smooth\SmoothSyncMirror.cs" />
+    <Compile Include="Smooth\StateMirror.cs" />
+    <Compile Include="Smooth\SyncMode.cs" />
+    <Compile Include="Smooth\SyncProjectilesMessageFunctions.cs" />
+    <Compile Include="SocialBehavior.cs" />
+    <Compile Include="SoundSettings.cs" />
+    <Compile Include="SpawnableEntry.cs" />
+    <Compile Include="SpawnableSettings.cs" />
+    <Compile Include="SpawnableSO.cs" />
+    <Compile Include="SpawnArea.cs" />
+    <Compile Include="SpawnBoxPlayerRagdollTrigger.cs" />
+    <Compile Include="SpiralPositioner.cs" />
+    <Compile Include="SpringPositionFollower.cs" />
+    <Compile Include="SpringRotationFollower.cs" />
+    <Compile Include="SpringRotationFollowerY.cs" />
+    <Compile Include="SROptions.cs" />
+    <Compile Include="SROptionsPropertyChanged.cs" />
+    <Compile Include="StampManager.cs" />
+    <Compile Include="StatusConditionData.cs" />
+    <Compile Include="SteamAchievementsManager.cs" />
+    <Compile Include="SteamAchievement_SteamworksNET.cs" />
+    <Compile Include="SteamIdComponent.cs" />
+    <Compile Include="SteamManager.cs" />
+    <Compile Include="SteamRichPresenceManager.cs" />
+    <Compile Include="StreamingAssetVideoPlayer.cs" />
+    <Compile Include="Suit.cs" />
+    <Compile Include="SummarySceneManager.cs" />
+    <Compile Include="System\Runtime\CompilerServices\NullableAttribute.cs" />
+    <Compile Include="System\Runtime\CompilerServices\NullableContextAttribute.cs" />
+    <Compile Include="TagCursorMapping.cs" />
+    <Compile Include="Taser.cs" />
+    <Compile Include="TimeConditionData.cs" />
+    <Compile Include="TimeMachine.cs" />
+    <Compile Include="TitleSettingItem.cs" />
+    <Compile Include="ToggleSettingItem.cs" />
+    <Compile Include="TooltipElement.cs" />
+    <Compile Include="TooltipElementType.cs" />
+    <Compile Include="TooltipKeyParser.cs" />
+    <Compile Include="TooltipKeySetup.cs" />
+    <Compile Include="Trampoline.cs" />
+    <Compile Include="TransformLerper.cs" />
+    <Compile Include="TransformLocker.cs" />
+    <Compile Include="TransformSnapper.cs" />
+    <Compile Include="TransformTarget.cs" />
+    <Compile Include="TransitionAnimator.cs" />
+    <Compile Include="UIButtonFeedback.cs" />
+    <Compile Include="UIColorManager.cs" />
+    <Compile Include="UIColorPalette.cs" />
+    <Compile Include="UICursor.cs" />
+    <Compile Include="UICursorSimple.cs" />
+    <Compile Include="UIHoverScaleFeedback.cs" />
+    <Compile Include="UIImportance.cs" />
+    <Compile Include="UIManager.cs" />
+    <Compile Include="UnityMainThreadDispatcher.cs" />
+    <Compile Include="UnitySourceGeneratedAssemblyMonoScriptTypes_v1.cs" />
+    <Compile Include="Upgrade.cs" />
+    <Compile Include="UpgradeEntryUI.cs" />
+    <Compile Include="UpgradeManager.cs" />
+    <Compile Include="UpgradeUI.cs" />
+    <Compile Include="UprightStabilizer.cs" />
+    <Compile Include="ValuableItem.cs" />
+    <Compile Include="VehicleDoors.cs" />
+    <Compile Include="VersionDisplay.cs" />
+    <Compile Include="VersionMismatchDisplay.cs" />
+    <Compile Include="VersionMismatchManager.cs" />
+    <Compile Include="VoiceAnnouncementPlayer.cs" />
+    <Compile Include="VoiceChatInputMode.cs" />
+    <Compile Include="VoiceManipulatorItem.cs" />
+    <Compile Include="VoiceVolumeEntry.cs" />
+    <Compile Include="VoipManipulation.cs" />
+    <Compile Include="VoipManipulationManager.cs" />
+    <Compile Include="WebSocketManager.cs" />
+    <Compile Include="WebSocketRelayMessage.cs" />
+    <Compile Include="Wheel.cs" />
+    <Compile Include="WheelLocal.cs" />
+    <Compile Include="WheelOfFortune.cs" />
+    <Compile Include="WheelOfFortuneLocal.cs" />
+    <Compile Include="WheelResult.cs" />
+    <Compile Include="WinCountConditionData.cs" />
+    <Compile Include="WindowQuadrantLayout.cs" />
+    <Compile Include="WinSceneManager.cs" />
+    <Compile Include="WordBankSO.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
