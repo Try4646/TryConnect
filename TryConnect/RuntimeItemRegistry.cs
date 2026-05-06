@@ -525,6 +525,15 @@ namespace TryConnect
             {
                 registration.SpawnableId = ModUtils.GetStableSpawnableId(registration.OwnerGuid, registration.Key);
             }
+            if (registration.CustomPrefab != null)
+            {
+                TryConnectApi.RefreshItemPrefab(registration.CustomPrefab);
+            }
+            if (registration.MarkerPrefab != null)
+            {
+                TryConnectApi.RefreshItemPrefab(registration.MarkerPrefab);
+            }
+
             return true;
         }
 
@@ -622,6 +631,7 @@ namespace TryConnect
             if (request.CustomPrefab != null)
             {
                 TryConnectApi.PrepareRuntimeNetworkTemplate(spawnPrefab);
+                TryConnectApi.RefreshItemPrefab(spawnPrefab);
             }
 
             if (spawnPrefab.GetComponent<Item>() == null)
@@ -637,6 +647,7 @@ namespace TryConnect
             markerPrefab.SetActive(false);
             UnityEngine.Object.DontDestroyOnLoad(markerPrefab);
             TryConnectApi.PrepareRuntimeNetworkTemplate(markerPrefab);
+            TryConnectApi.RefreshItemPrefab(markerPrefab);
 
             Item markerItem = markerPrefab.GetComponent<Item>();
             if (markerItem == null)
@@ -782,9 +793,11 @@ namespace TryConnect
         private static void ApplyDefinitionToInstance(CustomItemDefinition definition, GameObject spawnedObject, Vector3 resolvedScale)
         {
             TryConnectApi.PrepareRuntimeNetworkTemplate(spawnedObject);
+            TryConnectApi.RefreshItemPrefab(spawnedObject);
             spawnedObject.name = definition.DisplayName;
             spawnedObject.transform.localScale = resolvedScale;
             spawnedObject.SetActive(true);
+            TryConnectApi.RefreshItemPrefab(spawnedObject);
 
             NetworkIdentity networkIdentity = spawnedObject.GetComponent<NetworkIdentity>();
             if (networkIdentity != null)
