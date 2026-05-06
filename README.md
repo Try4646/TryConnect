@@ -5,87 +5,49 @@
 
 
 ```cs
-using System;
+using System.Collections;
 using BepInEx;
 using TryConnect;
 using UnityEngine;
 
 [BepInDependency(TryConnectApi.PluginGuid)]
-[BepInPlugin("com.example.house-special", "House Special", "1.0.0")]
-public sealed class HouseSpecialPlugin : BaseUnityPlugin
+[BepInPlugin("com.try-4646.Heroin-Mod", "Heroin", "1.0.0")]
+public sealed class HeroinPlugin : BaseUnityPlugin
 {
-    private const string BundlePath = "sphere.assetbundle";
-    private const string VisualPrefabName = "sphere";
-
     private void Awake()
     {
-        SpawnableSO drinkSpawnable = TryConnectApi.FindVanillaSpawnable<Drink>();
-        if (drinkSpawnable == null)
-        {
-            Logger.LogError("Could not resolve a vanilla Drink spawnable.");
-            return;
-        }
+        TryConnectRegistrationResult result =
+            TryConnectApi.RegisterBundledCustomItem<Drink, HeroinDrink>(
+                this,
+                new TryConnectBundledItemRegistration
+                {
+                    Key = "heroin_injector",
+                    DisplayName = "Heroin",
+                    Description = "Go Crazy.",
+                    BundlePath = "heroin.assetbundle",
+                    VisualPrefabName = "heroin",
 
-        GameObject customPrefab = TryConnectApi.CreatePrefabTemplate(drinkSpawnable, "HouseSpecialPrefab");
-        GameObject markerPrefab = TryConnectApi.CreatePrefabTemplate(drinkSpawnable, "HouseSpecialMarker");
+                    VisualLocalScale = Vector3.one * 1f,
+                    ApplyVisualColor = true,
+                    VisualColor = new Color(0.8f, 0.1f, 0.1f),
 
-        TryConnectApi.SwapPrefabComponent<Drink, HouseSpecialDrink>(customPrefab);
+                    ReplacementChancePercent = 100,
+                    ExtraBasePrice = 1,
+                    ExtraFloorPrice = 1
 
-        AssetBundle bundle = null;
-        try
-        {
-            bundle = TryConnectAssetBundles.LoadRelativeToPlugin(this, BundlePath);
-            GameObject visualPrefab = TryConnectAssetBundles.LoadAsset<GameObject>(bundle, VisualPrefabName);
-
-            TryConnectApi.ReplaceVisualsWithPrefab(
-                customPrefab,
-                visualPrefab,
-                Vector3.one * 0.5f,
-                replaceColliders: true);
-
-            TryConnectApi.ReplaceVisualsWithPrefab(
-                markerPrefab,
-                visualPrefab,
-                Vector3.one * 0.5f,
-                replaceColliders: true);
-        }
-        catch (Exception ex)
-        {
-            Logger.LogError($"Failed to load sphere bundle content: {ex}");
-            return;
-        }
-        finally
-        {
-            if (bundle != null)
-            {
-                bundle.Unload(false);
-            }
-        }
-
-        TryConnectRegistrationResult result = TryConnectApi.RegisterCustomItem(
-            new TryConnectItemRegistration
-            {
-                OwnerGuid = Info.Metadata.GUID,
-                Key = "house_special",
-                DisplayName = "House Special",
-                Description = "TryConnect test custom drink.",
-                BaseSpawnable = drinkSpawnable,
-                CustomPrefab = customPrefab,
-                MarkerPrefab = markerPrefab,
-                ApplyTint = true,
-                Tint = Color.magenta,
-                ReplacementChancePercent = 100,
-                ExtraBasePrice = 1,
-                ExtraFloorPrice = 1
-            });
+                    // ReplaceColliders = true,
+                    // VisualLocalPosition = new Vector3(0f, 0f, 0f),
+                    // VisualLocalEulerAngles = new Vector3(0f, 0f, 0f)
+                });
 
         Logger.LogInfo($"TryConnect register result: {result}");
     }
 }
 
-public sealed class HouseSpecialDrink : Drink
+public sealed class HeroinDrink : Drink
 {
     private bool _extraEffectAppliedThisPress;
+    private bool _ragdollEffectActive;
 
     protected override void OnUseItem(bool isPressed)
     {
@@ -113,10 +75,45 @@ public sealed class HouseSpecialDrink : Drink
         PlayerBuff buff = holder.GetComponent<PlayerBuff>();
         if (buff != null)
         {
-            buff.ApplyBuff(PlayerBuffType.TipsyFortune, 1, 5f);
+            buff.ApplyBuff(PlayerBuffType.TipsyFortune, 1, 15f);
         }
 
-        Debug.Log("[House Special] Extra server-side effect applied.");
+        if (!_ragdollEffectActive)
+        {
+            StartCoroutine(RandomRagdollEffect(holder));
+        }
+
+        Debug.Log("[Heroin] Random ragdoll effect started.");
+    }
+
+    private IEnumerator RandomRagdollEffect(PlayerInventory holder)
+    {
+        _ragdollEffectActive = true;
+
+        PlayerController playerController = holder.GetComponent<PlayerController>();
+
+        float duration = 15f;
+        float timer = 0f;
+
+        while (timer < duration)
+        {
+            float randomDelay = Random.Range(1f, 3.5f);
+
+            yield return new WaitForSeconds(randomDelay);
+
+            if (playerController != null)
+            {
+                playerController.TriggerRagdoll();
+
+                Debug.Log("[Heroin] Random ragdoll triggered.");
+            }
+
+            timer += randomDelay;
+        }
+
+        _ragdollEffectActive = false;
+
+        Debug.Log("[Heroin] Random ragdoll effect ended.");
     }
 }
 
