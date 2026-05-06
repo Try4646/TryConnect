@@ -1,4 +1,4 @@
-## How to Use TryConnect in Your Mod
+## How to Use TryConnect in Your Mod (WIP!!)
 
 1. **Add TryConnect as a dependency in your mod.**
 2. **Register your custom item in the `Awake` method.**
