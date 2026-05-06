@@ -18,6 +18,7 @@ namespace TryConnect
 
         private static readonly Dictionary<int, CustomItemRequest> RequestsBySpawnableId = new Dictionary<int, CustomItemRequest>();
         private static readonly Dictionary<string, CustomItemRequest> RequestsByUniqueKey = new Dictionary<string, CustomItemRequest>(StringComparer.OrdinalIgnoreCase);
+        private static readonly Dictionary<uint, CustomItemRequest> RequestsByAssetId = new Dictionary<uint, CustomItemRequest>();
         private static readonly Dictionary<int, CustomItemDefinition> DefinitionsBySpawnableId = new Dictionary<int, CustomItemDefinition>();
         private static readonly Dictionary<uint, CustomItemDefinition> DefinitionsByAssetId = new Dictionary<uint, CustomItemDefinition>();
         private static readonly Dictionary<GameObject, CustomItemDefinition> DefinitionsByMarkerPrefab = new Dictionary<GameObject, CustomItemDefinition>();
@@ -49,10 +50,15 @@ namespace TryConnect
                     UnityEngine.Object.Destroy(definition.Spawnable);
                 }
             }
+
+            RequestsBySpawnableId.Clear();
+            RequestsByUniqueKey.Clear();
+            RequestsByAssetId.Clear();
             DefinitionsBySpawnableId.Clear();
             DefinitionsByAssetId.Clear();
             DefinitionsByMarkerPrefab.Clear();
             DefinitionsByBasePrefab.Clear();
+            _builtInRegistrationsAdded = false;
             _plugin = null;
         }
 
@@ -116,7 +122,11 @@ namespace TryConnect
         internal static void TryEnsureClientRegistration(uint assetId)
         {
             CustomItemDefinition definition;
-            if (DefinitionsByAssetId.TryGetValue(assetId, out definition))
+            if (!DefinitionsByAssetId.TryGetValue(assetId, out definition))
+            {
+                definition = TryBuildDefinitionForAssetId(assetId);
+            }
+            if (definition != null)
             {
                 EnsureClientSpawnHandler(definition);
             }
@@ -125,11 +135,11 @@ namespace TryConnect
         internal static SpawnableSO GetCustomSpawnable(int id)
         {
             CustomItemDefinition definition;
-            if (DefinitionsBySpawnableId.TryGetValue(id, out definition))
+            if (!DefinitionsBySpawnableId.TryGetValue(id, out definition))
             {
-                return definition.Spawnable;
+                definition = TryBuildDefinitionForSpawnableId(id);
             }
-            return null;
+            return definition != null ? definition.Spawnable : null;
         }
 
         internal static bool TryGetRegisteredItemInfo(int spawnableId, out TryConnectRegisteredItemInfo itemInfo)
@@ -180,12 +190,63 @@ namespace TryConnect
             return items.ToArray();
         }
 
+        internal static bool TryGetVanillaSpawnable(int spawnableId, out SpawnableSO spawnable)
+        {
+            spawnable = null;
+            SpawnableSettings spawnableSettings = Resources.Load<SpawnableSettings>("SpawnableSettings");
+            if (spawnableSettings == null)
+            {
+                return false;
+            }
+            return TryFindSpawnable(spawnableSettings, delegate(SpawnableSO candidate)
+            {
+                return candidate != null && candidate.spawnableID == spawnableId;
+            }, out spawnable);
+        }
+
+        internal static bool TryFindVanillaSpawnable(string searchTerm, out SpawnableSO spawnable)
+        {
+            spawnable = null;
+            if (string.IsNullOrWhiteSpace(searchTerm))
+            {
+                return false;
+            }
+
+            SpawnableSettings spawnableSettings = Resources.Load<SpawnableSettings>("SpawnableSettings");
+            if (spawnableSettings == null)
+            {
+                return false;
+            }
+
+            string trimmed = searchTerm.Trim();
+            return TryFindSpawnable(spawnableSettings, delegate(SpawnableSO candidate)
+            {
+                if (candidate == null)
+                {
+                    return false;
+                }
+                if (string.Equals(candidate.spawnableName, trimmed, StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+                if (string.Equals(candidate.name, trimmed, StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+                return candidate.prefab != null && string.Equals(candidate.prefab.name, trimmed, StringComparison.OrdinalIgnoreCase);
+            }, out spawnable);
+        }
+
         internal static bool TryGetCustomBasePrice(SpawnableSO spawnableSO, ref int basePrice)
         {
             CustomItemDefinition definition;
             if (!TryGetDefinition(spawnableSO, out definition))
             {
-                return false;
+                definition = TryBuildDefinitionForSpawnableId(spawnableSO != null ? spawnableSO.spawnableID : 0);
+                if (definition == null)
+                {
+                    return false;
+                }
             }
             basePrice = definition.BasePrice;
             return true;
@@ -196,7 +257,11 @@ namespace TryConnect
             CustomItemDefinition definition;
             if (!TryGetDefinition(spawnableSO, out definition))
             {
-                return false;
+                definition = TryBuildDefinitionForSpawnableId(spawnableSO != null ? spawnableSO.spawnableID : 0);
+                if (definition == null)
+                {
+                    return false;
+                }
             }
             priceIncreasePerFloor = definition.PriceIncreasePerFloor;
             return true;
@@ -207,7 +272,11 @@ namespace TryConnect
             CustomItemDefinition definition;
             if (!TryGetDefinition(spawnableSO, out definition))
             {
-                return false;
+                definition = TryBuildDefinitionForSpawnableId(spawnableSO != null ? spawnableSO.spawnableID : 0);
+                if (definition == null)
+                {
+                    return false;
+                }
             }
             description = definition.Description;
             return true;
@@ -269,8 +338,8 @@ namespace TryConnect
                 return false;
             }
 
-            GameObject spawnedObject = UnityEngine.Object.Instantiate(definition.BasePrefab, position, rotation);
-            ApplyDefinitionToInstance(definition, spawnedObject, scale);
+            GameObject spawnedObject = UnityEngine.Object.Instantiate(definition.SpawnPrefab, position, rotation);
+            ApplyDefinitionToServerInstance(definition, spawnedObject, scale);
             NetworkServer.Spawn(spawnedObject, definition.AssetId, null);
             TryConnectPlugin.Log.LogInfo(string.Format("Spawned custom item '{0}'.", definition.DisplayName));
 
@@ -299,7 +368,6 @@ namespace TryConnect
                 stamp.StartCoroutine(routine);
             }
         }
-
         private static bool EnsureDefinition(SpawnableSettings spawnableSettings, ItemPriceSettings priceSettings, CustomItemRequest request)
         {
             if (request == null)
@@ -365,6 +433,7 @@ namespace TryConnect
                 DisplayName = "Ticket Fizz",
                 Description = "A TryConnect house drink. Behaves like the vanilla Drink, but shows up as injected custom shop loot.",
                 BaseItemComponentType = typeof(Drink),
+                ApplyTint = true,
                 Tint = new Color(0.22f, 0.95f, 0.92f),
                 ModelScaleMultiplier = new Vector3(1.08f, 1.08f, 1.08f),
                 ReplacementChancePercent = ModUtils.ClampPercent(TryConnectPlugin.TicketFizzReplacementChance.Value),
@@ -381,6 +450,7 @@ namespace TryConnect
                 DisplayName = "Loaded Chip",
                 Description = "A counterfeit high-roller token. Behaves like the vanilla Golden Chip when applied to a game.",
                 BaseItemComponentType = typeof(GoldenChip),
+                ApplyTint = true,
                 Tint = new Color(1f, 0.72f, 0.12f),
                 ModelScaleMultiplier = new Vector3(1.12f, 1.12f, 1.12f),
                 ReplacementChancePercent = ModUtils.ClampPercent(TryConnectPlugin.LoadedChipReplacementChance.Value),
@@ -393,6 +463,7 @@ namespace TryConnect
         {
             RequestsBySpawnableId.Add(request.SpawnableId, request);
             RequestsByUniqueKey.Add(BuildUniqueKey(request.OwnerGuid, request.Key), request);
+            RequestsByAssetId.Add(request.AssetId, request);
         }
 
         private static CustomItemRequest CreateRequest(TryConnectItemRegistration registration)
@@ -408,6 +479,9 @@ namespace TryConnect
                 BaseSpawnable = registration.BaseSpawnable,
                 BaseSpawnableId = registration.BaseSpawnableId,
                 BaseItemComponentType = registration.BaseItemComponentType,
+                CustomPrefab = registration.CustomPrefab,
+                MarkerPrefab = registration.MarkerPrefab,
+                ApplyTint = registration.ApplyTint,
                 Tint = registration.Tint,
                 ModelScaleMultiplier = registration.ModelScaleMultiplier,
                 ReplacementChancePercent = ModUtils.ClampPercent(registration.ReplacementChancePercent),
@@ -426,11 +500,19 @@ namespace TryConnect
             {
                 return false;
             }
-            if (registration.BaseSpawnable == null && registration.BaseSpawnableId == 0 && registration.BaseItemComponentType == null)
+            if (registration.CustomPrefab == null && registration.BaseSpawnable == null && registration.BaseSpawnableId == 0 && registration.BaseItemComponentType == null)
             {
                 return false;
             }
             if (registration.BaseItemComponentType != null && !typeof(Component).IsAssignableFrom(registration.BaseItemComponentType))
+            {
+                return false;
+            }
+            if (registration.CustomPrefab != null && registration.CustomPrefab.GetComponent<Item>() == null)
+            {
+                return false;
+            }
+            if (registration.MarkerPrefab != null && registration.MarkerPrefab.GetComponent<Item>() == null)
             {
                 return false;
             }
@@ -457,39 +539,110 @@ namespace TryConnect
             DefinitionsByAssetId.Add(definition.AssetId, definition);
             DefinitionsByMarkerPrefab.Add(definition.MarkerPrefab, definition);
 
-            List<CustomItemDefinition> definitionsForBasePrefab;
-            if (!DefinitionsByBasePrefab.TryGetValue(definition.BasePrefab, out definitionsForBasePrefab))
+            if (definition.BasePrefab != null)
             {
-                definitionsForBasePrefab = new List<CustomItemDefinition>();
-                DefinitionsByBasePrefab.Add(definition.BasePrefab, definitionsForBasePrefab);
+                List<CustomItemDefinition> definitionsForBasePrefab;
+                if (!DefinitionsByBasePrefab.TryGetValue(definition.BasePrefab, out definitionsForBasePrefab))
+                {
+                    definitionsForBasePrefab = new List<CustomItemDefinition>();
+                    DefinitionsByBasePrefab.Add(definition.BasePrefab, definitionsForBasePrefab);
+                }
+                definitionsForBasePrefab.Add(definition);
+                definitionsForBasePrefab.Sort(delegate(CustomItemDefinition left, CustomItemDefinition right)
+                {
+                    return left.Spawnable.spawnableID.CompareTo(right.Spawnable.spawnableID);
+                });
             }
-            definitionsForBasePrefab.Add(definition);
-            definitionsForBasePrefab.Sort(delegate(CustomItemDefinition left, CustomItemDefinition right)
+        }
+
+        private static CustomItemDefinition TryBuildDefinitionForAssetId(uint assetId)
+        {
+            CustomItemDefinition definition;
+            if (DefinitionsByAssetId.TryGetValue(assetId, out definition))
             {
-                return left.Spawnable.spawnableID.CompareTo(right.Spawnable.spawnableID);
-            });
+                return definition;
+            }
+
+            CustomItemRequest request;
+            if (!RequestsByAssetId.TryGetValue(assetId, out request))
+            {
+                return null;
+            }
+
+            return TryBuildDefinition(request);
+        }
+
+        private static CustomItemDefinition TryBuildDefinitionForSpawnableId(int spawnableId)
+        {
+            if (spawnableId == 0)
+            {
+                return null;
+            }
+
+            CustomItemDefinition definition;
+            if (DefinitionsBySpawnableId.TryGetValue(spawnableId, out definition))
+            {
+                return definition;
+            }
+
+            CustomItemRequest request;
+            if (!RequestsBySpawnableId.TryGetValue(spawnableId, out request))
+            {
+                return null;
+            }
+
+            return TryBuildDefinition(request);
+        }
+
+        private static CustomItemDefinition TryBuildDefinition(CustomItemRequest request)
+        {
+            SpawnableSettings spawnableSettings = Resources.Load<SpawnableSettings>("SpawnableSettings");
+            if (spawnableSettings == null || !spawnableSettings.isEnabled)
+            {
+                return null;
+            }
+
+            ItemPriceSettings priceSettings = Resources.Load<ItemPriceSettings>("ItemPriceSettings");
+            EnsureDefinition(spawnableSettings, priceSettings, request);
+
+            CustomItemDefinition definition;
+            DefinitionsBySpawnableId.TryGetValue(request.SpawnableId, out definition);
+            return definition;
         }
 
         private static CustomItemDefinition BuildDefinition(SpawnableSettings spawnableSettings, ItemPriceSettings priceSettings, CustomItemRequest request)
         {
             SpawnableSO baseSpawnable = ResolveBaseSpawnable(spawnableSettings, request);
-            if (baseSpawnable == null || baseSpawnable.prefab == null)
+            GameObject spawnPrefab = request.CustomPrefab != null ? request.CustomPrefab : ((baseSpawnable != null) ? baseSpawnable.prefab : null);
+            if (spawnPrefab == null)
             {
-                LogBuildFailureOnce(request, "Could not resolve a base spawnable.");
+                LogBuildFailureOnce(request, "Could not resolve a spawn prefab.");
+                return null;
+            }
+            if (request.CustomPrefab != null)
+            {
+                TryConnectApi.PrepareRuntimeNetworkTemplate(spawnPrefab);
+            }
+
+            if (spawnPrefab.GetComponent<Item>() == null)
+            {
+                LogBuildFailureOnce(request, string.Format("Custom prefab for '{0}' is missing an Item-derived component.", request.DisplayName));
                 return null;
             }
 
-            GameObject markerPrefab = UnityEngine.Object.Instantiate(baseSpawnable.prefab);
+            GameObject markerSourcePrefab = request.MarkerPrefab != null ? request.MarkerPrefab : spawnPrefab;
+            GameObject markerPrefab = UnityEngine.Object.Instantiate(markerSourcePrefab);
             markerPrefab.name = request.Key + "_Marker";
             markerPrefab.hideFlags = HideFlags.HideAndDontSave;
             markerPrefab.SetActive(false);
             UnityEngine.Object.DontDestroyOnLoad(markerPrefab);
+            TryConnectApi.PrepareRuntimeNetworkTemplate(markerPrefab);
 
             Item markerItem = markerPrefab.GetComponent<Item>();
             if (markerItem == null)
             {
                 UnityEngine.Object.Destroy(markerPrefab);
-                LogBuildFailureOnce(request, string.Format("Failed to create custom marker for '{0}' because the base prefab is missing Item.", request.DisplayName));
+                LogBuildFailureOnce(request, string.Format("Marker prefab for '{0}' is missing an Item-derived component.", request.DisplayName));
                 return null;
             }
 
@@ -504,7 +657,7 @@ namespace TryConnect
 
             int basePrice = 4;
             int priceIncreasePerFloor = 1;
-            if (priceSettings != null)
+            if (priceSettings != null && baseSpawnable != null)
             {
                 basePrice = Math.Max(1, priceSettings.GetBasePrice(baseSpawnable) + request.ExtraBasePrice);
                 priceIncreasePerFloor = Math.Max(0, priceSettings.GetPriceIncreasePerFloor(baseSpawnable) + request.ExtraFloorPrice);
@@ -514,11 +667,13 @@ namespace TryConnect
             definition.OwnerGuid = request.OwnerGuid;
             definition.Key = request.Key;
             definition.AssetId = request.AssetId;
-            definition.BasePrefab = baseSpawnable.prefab;
+            definition.BasePrefab = baseSpawnable != null ? baseSpawnable.prefab : null;
+            definition.SpawnPrefab = spawnPrefab;
             definition.BasePrice = basePrice;
             definition.Description = request.Description;
             definition.DisplayName = request.DisplayName;
             definition.MarkerPrefab = markerPrefab;
+            definition.ApplyTint = request.ApplyTint;
             definition.ModelScaleMultiplier = request.ModelScaleMultiplier;
             definition.PriceIncreasePerFloor = priceIncreasePerFloor;
             definition.ReplacementChancePercent = request.ReplacementChancePercent;
@@ -529,7 +684,6 @@ namespace TryConnect
             EnsureClientSpawnHandler(definition);
             return definition;
         }
-
         private static void LogBuildFailureOnce(CustomItemRequest request, string message)
         {
             if (request == null || request.HasLoggedBuildFailure)
@@ -561,30 +715,43 @@ namespace TryConnect
             return null;
         }
 
-        private static SpawnableSO FindBaseSpawnableById(SpawnableSettings spawnableSettings, int spawnableId)
+        private static bool TryFindSpawnable(SpawnableSettings spawnableSettings, Predicate<SpawnableSO> predicate, out SpawnableSO spawnable)
         {
+            spawnable = null;
+            if (spawnableSettings == null || predicate == null)
+            {
+                return false;
+            }
+
             for (int i = 0; i < spawnableSettings.spawnables.Count; i++)
             {
                 SpawnableSO candidate = spawnableSettings.spawnables[i];
-                if (candidate != null && candidate.spawnableID == spawnableId)
+                if (predicate(candidate))
                 {
-                    return candidate;
+                    spawnable = candidate;
+                    return true;
                 }
             }
-            return null;
+
+            return false;
+        }
+
+        private static SpawnableSO FindBaseSpawnableById(SpawnableSettings spawnableSettings, int spawnableId)
+        {
+            SpawnableSO spawnable;
+            return TryFindSpawnable(spawnableSettings, delegate(SpawnableSO candidate)
+            {
+                return candidate != null && candidate.spawnableID == spawnableId;
+            }, out spawnable) ? spawnable : null;
         }
 
         private static SpawnableSO FindBaseSpawnable(SpawnableSettings spawnableSettings, Type componentType)
         {
-            for (int i = 0; i < spawnableSettings.spawnables.Count; i++)
+            SpawnableSO spawnable;
+            return TryFindSpawnable(spawnableSettings, delegate(SpawnableSO candidate)
             {
-                SpawnableSO candidate = spawnableSettings.spawnables[i];
-                if (candidate != null && candidate.prefab != null && candidate.prefab.GetComponent(componentType) != null)
-                {
-                    return candidate;
-                }
-            }
-            return null;
+                return candidate != null && candidate.prefab != null && candidate.prefab.GetComponent(componentType) != null;
+            }, out spawnable) ? spawnable : null;
         }
 
         private static void ApplyDefinitionToMarker(CustomItemDefinition definition, GameObject markerPrefab)
@@ -602,10 +769,21 @@ namespace TryConnect
             }
         }
 
-        private static void ApplyDefinitionToInstance(CustomItemDefinition definition, GameObject spawnedObject, Vector3 scale)
+        private static void ApplyDefinitionToServerInstance(CustomItemDefinition definition, GameObject spawnedObject, Vector3 scaleMultiplier)
         {
+            ApplyDefinitionToInstance(definition, spawnedObject, Vector3.Scale(spawnedObject.transform.localScale, scaleMultiplier));
+        }
+
+        private static void ApplyDefinitionToClientInstance(CustomItemDefinition definition, GameObject spawnedObject, Vector3 scale)
+        {
+            ApplyDefinitionToInstance(definition, spawnedObject, scale);
+        }
+
+        private static void ApplyDefinitionToInstance(CustomItemDefinition definition, GameObject spawnedObject, Vector3 resolvedScale)
+        {
+            TryConnectApi.PrepareRuntimeNetworkTemplate(spawnedObject);
             spawnedObject.name = definition.DisplayName;
-            spawnedObject.transform.localScale = scale;
+            spawnedObject.transform.localScale = resolvedScale;
             spawnedObject.SetActive(true);
 
             NetworkIdentity networkIdentity = spawnedObject.GetComponent<NetworkIdentity>();
@@ -631,7 +809,12 @@ namespace TryConnect
             {
                 modelTransform = root;
             }
-            modelTransform.localScale = Vector3.Scale(Vector3.one, definition.ModelScaleMultiplier);
+            modelTransform.localScale = Vector3.Scale(modelTransform.localScale, definition.ModelScaleMultiplier);
+
+            if (!definition.ApplyTint)
+            {
+                return;
+            }
 
             Renderer[] renderers = root.GetComponentsInChildren<Renderer>(true);
             for (int i = 0; i < renderers.Length; i++)
@@ -694,11 +877,15 @@ namespace TryConnect
             CustomItemDefinition definition;
             if (!DefinitionsByAssetId.TryGetValue(message.assetId, out definition))
             {
-                return null;
+                definition = TryBuildDefinitionForAssetId(message.assetId);
+                if (definition == null)
+                {
+                    return null;
+                }
             }
 
-            GameObject spawnedObject = UnityEngine.Object.Instantiate(definition.BasePrefab, message.position, message.rotation);
-            ApplyDefinitionToInstance(definition, spawnedObject, message.scale);
+            GameObject spawnedObject = UnityEngine.Object.Instantiate(definition.SpawnPrefab, message.position, message.rotation);
+            ApplyDefinitionToClientInstance(definition, spawnedObject, message.scale);
             return spawnedObject;
         }
 
@@ -716,10 +903,12 @@ namespace TryConnect
             internal string Key;
             internal uint AssetId;
             internal GameObject BasePrefab;
+            internal GameObject SpawnPrefab;
             internal int BasePrice;
             internal string Description;
             internal string DisplayName;
             internal GameObject MarkerPrefab;
+            internal bool ApplyTint;
             internal Vector3 ModelScaleMultiplier;
             internal int PriceIncreasePerFloor;
             internal int ReplacementChancePercent;
@@ -738,6 +927,9 @@ namespace TryConnect
             internal SpawnableSO BaseSpawnable;
             internal int BaseSpawnableId;
             internal Type BaseItemComponentType;
+            internal GameObject CustomPrefab;
+            internal GameObject MarkerPrefab;
+            internal bool ApplyTint;
             internal Color Tint;
             internal Vector3 ModelScaleMultiplier;
             internal int ReplacementChancePercent;

@@ -13,6 +13,9 @@ namespace TryConnect
         public SpawnableSO BaseSpawnable { get; set; }
         public int BaseSpawnableId { get; set; }
         public Type BaseItemComponentType { get; set; }
+        public GameObject CustomPrefab { get; set; }
+        public GameObject MarkerPrefab { get; set; }
+        public bool ApplyTint { get; set; }
         public Color Tint { get; set; } = Color.white;
         public Vector3 ModelScaleMultiplier { get; set; } = Vector3.one;
         public int ReplacementChancePercent { get; set; }
