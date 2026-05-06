@@ -135,12 +135,16 @@
     <Reference Include="UnityEngine.ParticleSystemModule">
       <HintPath>D:\SteamLibrary\steamapps\common\Gamble With Your Friends\Gamble With Your Friends_Data\Managed\UnityEngine.ParticleSystemModule.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.AssetBundleModule">
+      <HintPath>D:\SteamLibrary\steamapps\common\Gamble With Your Friends\Gamble With Your Friends_Data\Managed\UnityEngine.AssetBundleModule.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MonoBehaviours\TryConnectComponent.cs" />
     <Compile Include="Patches\PlayerPatches.cs" />
     <Compile Include="RuntimeItemRegistry.cs" />
     <Compile Include="TryConnectApi.cs" />
+    <Compile Include="TryConnectAssetBundles.cs" />
     <Compile Include="TryConnectItemRegistration.cs" />
     <Compile Include="TryConnectRegisteredItemInfo.cs" />
     <Compile Include="TryConnectRegistrationResult.cs" />

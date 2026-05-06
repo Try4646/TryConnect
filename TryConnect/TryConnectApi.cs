@@ -10,7 +10,7 @@ namespace TryConnect
 {
     public static class TryConnectApi
     {
-        public const int ApiVersion = 2;
+        public const int ApiVersion = 3;
         public const string PluginGuid = TryConnectPlugin.PluginGuid;
         private static readonly FieldInfo SceneIdField = typeof(NetworkIdentity).GetField("sceneId", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
         private static readonly FieldInfo HasSpawnedField = typeof(NetworkIdentity).GetField("hasSpawned", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
@@ -238,6 +238,38 @@ namespace TryConnect
             return primitive;
         }
 
+        public static GameObject ReplaceVisualsWithPrefab(GameObject prefab, GameObject visualPrefab, Vector3 localScale, bool replaceColliders = true)
+        {
+            if (prefab == null)
+            {
+                throw new ArgumentNullException("prefab");
+            }
+            if (visualPrefab == null)
+            {
+                throw new ArgumentNullException("visualPrefab");
+            }
+
+            Transform visualRoot = ResolveVisualRoot(prefab);
+            int layer = visualRoot.gameObject.layer != 0 ? visualRoot.gameObject.layer : prefab.layer;
+
+            SetRenderersEnabled(visualRoot, false);
+            if (replaceColliders)
+            {
+                RemoveNonTriggerColliders(prefab);
+            }
+
+            GameObject visualInstance = UnityEngine.Object.Instantiate(visualPrefab);
+            visualInstance.name = string.IsNullOrWhiteSpace(visualPrefab.name) ? "CustomVisual" : visualPrefab.name;
+            visualInstance.transform.SetParent(visualRoot, false);
+            visualInstance.transform.localPosition = Vector3.zero;
+            visualInstance.transform.localRotation = Quaternion.identity;
+            visualInstance.transform.localScale = localScale;
+            SetLayerRecursively(visualInstance, layer);
+
+            RefreshItemPrefab(prefab);
+            return visualInstance;
+        }
+
         public static TryConnectRegisteredItemInfo[] GetRegisteredItems()
         {
             return RuntimeItemRegistry.GetRegisteredItemInfos();
@@ -347,6 +379,23 @@ namespace TryConnect
                 if (renderers[i] != null)
                 {
                     renderers[i].enabled = isEnabled;
+                }
+            }
+        }
+
+        private static void SetLayerRecursively(GameObject root, int layer)
+        {
+            if (root == null)
+            {
+                return;
+            }
+
+            Transform[] transforms = root.GetComponentsInChildren<Transform>(true);
+            for (int i = 0; i < transforms.Length; i++)
+            {
+                if (transforms[i] != null)
+                {
+                    transforms[i].gameObject.layer = layer;
                 }
             }
         }
