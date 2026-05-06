@@ -5,6 +5,7 @@
 
 
 ```cs
+using System;
 using BepInEx;
 using TryConnect;
 using UnityEngine;
@@ -13,6 +14,9 @@ using UnityEngine;
 [BepInPlugin("com.example.house-special", "House Special", "1.0.0")]
 public sealed class HouseSpecialPlugin : BaseUnityPlugin
 {
+    private const string BundlePath = "sphere.assetbundle";
+    private const string VisualPrefabName = "sphere";
+
     private void Awake()
     {
         SpawnableSO drinkSpawnable = TryConnectApi.FindVanillaSpawnable<Drink>();
@@ -27,17 +31,36 @@ public sealed class HouseSpecialPlugin : BaseUnityPlugin
 
         TryConnectApi.SwapPrefabComponent<Drink, HouseSpecialDrink>(customPrefab);
 
-        TryConnectApi.ReplaceVisualsWithPrimitive(
-            customPrefab,
-            PrimitiveType.Cube,
-            Color.magenta,
-            Vector3.one * 0.5f);
+        AssetBundle bundle = null;
+        try
+        {
+            bundle = TryConnectAssetBundles.LoadRelativeToPlugin(this, BundlePath);
+            GameObject visualPrefab = TryConnectAssetBundles.LoadAsset<GameObject>(bundle, VisualPrefabName);
 
-        TryConnectApi.ReplaceVisualsWithPrimitive(
-            markerPrefab,
-            PrimitiveType.Cube,
-            Color.magenta,
-            Vector3.one * 0.5f);
+            TryConnectApi.ReplaceVisualsWithPrefab(
+                customPrefab,
+                visualPrefab,
+                Vector3.one * 0.5f,
+                replaceColliders: true);
+
+            TryConnectApi.ReplaceVisualsWithPrefab(
+                markerPrefab,
+                visualPrefab,
+                Vector3.one * 0.5f,
+                replaceColliders: true);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError($"Failed to load sphere bundle content: {ex}");
+            return;
+        }
+        finally
+        {
+            if (bundle != null)
+            {
+                bundle.Unload(false);
+            }
+        }
 
         TryConnectRegistrationResult result = TryConnectApi.RegisterCustomItem(
             new TryConnectItemRegistration
@@ -49,7 +72,8 @@ public sealed class HouseSpecialPlugin : BaseUnityPlugin
                 BaseSpawnable = drinkSpawnable,
                 CustomPrefab = customPrefab,
                 MarkerPrefab = markerPrefab,
-                ApplyTint = false,
+                ApplyTint = true,
+                Tint = Color.magenta,
                 ReplacementChancePercent = 100,
                 ExtraBasePrice = 1,
                 ExtraFloorPrice = 1
